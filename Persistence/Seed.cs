@@ -12,8 +12,8 @@ namespace Persistence
         public static async Task SeedData(DataContext context)
         {
 
-        
-            if (!context.Customers.Any())
+
+            if (context.Customers.Any()) return;
             {
                 var customers = new List<Customer>
                 {
@@ -25,8 +25,8 @@ namespace Persistence
                 
                 };
 
-                context.Customers.AddRange(customers);
-                context.SaveChanges();
+                await context.Customers.AddRangeAsync(customers);
+                await context.SaveChangesAsync();
             }
           }
         }
