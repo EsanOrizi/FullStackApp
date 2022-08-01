@@ -24,7 +24,9 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(Guid id)
         {
+#pragma warning disable CS8604 // Possible null reference argument.
             return await _context.Customers.FindAsync(id);
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
     }
