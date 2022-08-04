@@ -1,11 +1,6 @@
 ﻿using Domain;
 using MediatR;
 using Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Customers
 {
@@ -27,7 +22,7 @@ namespace Application.Customers
 
             public async Task<Customer> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await this.context.Customers.FindAsync(request.Id);
+                return await context.Customers.FindAsync(request.Id);
             }
         }
     }

@@ -2,11 +2,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Customers
 {
@@ -25,7 +20,7 @@ namespace Application.Customers
 
             public async Task<List<Customer>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await this.context.Customers.ToListAsync();
+                return await context.Customers.ToListAsync();
             }
         }
     }
