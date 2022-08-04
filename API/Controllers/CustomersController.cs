@@ -20,5 +20,11 @@ namespace API.Controllers
             return await Mediator.Send(new Details.Query{Id = id});
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateCustomer(Customer customer)
+        {
+            return Ok(await Mediator.Send(new Create.Command { Customer = customer }));
+        }
+
     }
 }
