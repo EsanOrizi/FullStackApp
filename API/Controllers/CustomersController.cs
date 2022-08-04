@@ -1,32 +1,31 @@
 ﻿using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
+using Application;
+using Application.Customers;
 
 namespace API.Controllers
 {
     public class CustomersController : BaseApiController
     {
-        private readonly DataContext _context;
+        private readonly IMediator mediator;
 
-        public CustomersController(DataContext context)
+        public CustomersController(IMediator mediator)
         {
-            _context = context;
+            this.mediator = mediator;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Customer>>> GetCustomers()
         {
-            return await _context.Customers.ToListAsync();
+            return await this.mediator.Send(new List.Query());
         }
 
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(Guid id)
         {
-#pragma warning disable CS8604 // Possible null reference argument.
-            return await _context.Customers.FindAsync(id);
-#pragma warning restore CS8604 // Possible null reference argument.
+            return Ok();
         }
 
     }
