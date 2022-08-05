@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using AutoMapper;
+using Domain;
 using MediatR;
 using Persistence;
 using System;
@@ -19,19 +20,21 @@ namespace Application.Customers
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext context;
+            private readonly IMapper mapper;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IMapper mapper)
             {
                 this.context = context;
+                this.mapper = mapper;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var customer = await context.Customers.FindAsync(request.Customer.Id);
 
-                customer.Name = request.Customer.Name ?? customer.Name;
+                mapper.Map(request.Customer, customer);
 
-                await this.context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return Unit.Value;
             }
         }
