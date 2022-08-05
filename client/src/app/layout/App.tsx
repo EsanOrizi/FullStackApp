@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Header, List } from 'semantic-ui-react';
+import { Container, Header, List } from 'semantic-ui-react';
 import { Customer } from '../models/customer';
+import NavBar from './NavBar';
 
 function App() {
 
@@ -13,16 +14,18 @@ function App() {
   }, [])
 
   return (
-    <div>
-      <Header as='h2' icon='users' content='Customers'/>
+    <Fragment>
+       <NavBar />
+       <Container style={{marginTop: '7em'}}>
         <List>  
         {customers.map((customer) => (
           <List.Item key={customer.id}>
              {customer.name}
           </List.Item>
         ))}
-       </List>  
-     </div>
+       </List> 
+       </Container> 
+     </Fragment>
   );
 }
 
