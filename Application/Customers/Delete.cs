@@ -1,10 +1,5 @@
 ﻿using MediatR;
 using Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Customers
 {
@@ -26,7 +21,7 @@ namespace Application.Customers
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var customer =  await context.Customers.FindAsync(request.Id);
+                var customer = await context.Customers.FindAsync(request.Id);
                 context.Remove(customer);
                 await context.SaveChangesAsync();
                 return Unit.Value;

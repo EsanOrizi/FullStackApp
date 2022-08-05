@@ -7,7 +7,7 @@ namespace Application.Customers
 {
     public class List
     {
-        public class Query : IRequest<List<Customer>> {}
+        public class Query : IRequest<List<Customer>> { }
 
         public class Handler : IRequestHandler<Query, List<Customer>>
         {

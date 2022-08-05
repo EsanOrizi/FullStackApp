@@ -1,10 +1,5 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Persistence
 {
@@ -15,9 +10,9 @@ namespace Persistence
         }
 
         public DbSet<Customer> Customers { get; set; } = null!;
-    
-        
-        
-    
+
+
+
+
     }
 }

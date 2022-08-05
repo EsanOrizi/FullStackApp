@@ -1,12 +1,12 @@
-﻿using Domain;
+﻿using Application.Customers;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Application.Customers;
 
 namespace API.Controllers
 {
     public class CustomersController : BaseApiController
     {
-       
+
         [HttpGet]
         public async Task<ActionResult<List<Customer>>> GetCustomers()
         {
@@ -17,7 +17,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(Guid id)
         {
-            return await Mediator.Send(new Details.Query{Id = id});
+            return await Mediator.Send(new Details.Query { Id = id });
         }
 
         [HttpPost]
