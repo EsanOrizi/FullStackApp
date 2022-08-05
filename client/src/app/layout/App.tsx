@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Container, Header, List } from 'semantic-ui-react';
 import { Customer } from '../models/customer';
 import NavBar from './NavBar';
+import CustomerDashboard from '../../features/customers/dashboard/CustomerDashboard';
 
 function App() {
 
@@ -17,13 +18,7 @@ function App() {
     <Fragment>
        <NavBar />
        <Container style={{marginTop: '7em'}}>
-        <List>  
-        {customers.map((customer) => (
-          <List.Item key={customer.id}>
-             {customer.name}
-          </List.Item>
-        ))}
-       </List> 
+         <CustomerDashboard customers={customers} />
        </Container> 
      </Fragment>
   );
