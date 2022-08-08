@@ -4,9 +4,12 @@ import { Customer } from '../../../app/models/customer';
 
 interface Props {
     customers: Customer[];
+    selectCustomer: (id: string) => void;
+ 
+
 }
 
-export default function CustomerList({customers}: Props) {
+export default function CustomerList({customers, selectCustomer}: Props) {
     return (
         <Segment>
             <Item.Group divided>
@@ -20,8 +23,7 @@ export default function CustomerList({customers}: Props) {
                              <div>{customer.phone}</div>
                             </Item.Description>
                             <Item.Extra>
-                                <Button floated='right' content='View' color='blue' />
-                                
+                                <Button onClick={() => selectCustomer(customer.id)} floated='right' content='View' color='blue' />
                             </Item.Extra>
                         </Item.Content>
                     </Item> 

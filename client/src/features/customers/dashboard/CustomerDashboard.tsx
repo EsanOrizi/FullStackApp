@@ -7,18 +7,24 @@ import CustomerList from './CustomerList';
 
 interface Props {
     customers: Customer[];
+    selectedCustomer: Customer | undefined;
+    selectCustomer: (id: string) => void;
+    cancelSelectCustomer: () => void;
 }
 
-export default function CustomerDashboard({customers}: Props) {
+export default function CustomerDashboard({customers, selectedCustomer, 
+        selectCustomer, cancelSelectCustomer}: Props) {
     return (
         <Grid>
             <Grid.Column width='10'>
-                <CustomerList customers={customers} />
+                <CustomerList customers={customers} selectCustomer={selectCustomer}/>
             </Grid.Column>
             <Grid.Column width='6'>
-                {customers[0] && 
-                <CustomerDetails customer={customers[0]} /> }
-                <CustomerForm />
+                {selectedCustomer && 
+                <CustomerDetails customer={selectedCustomer} 
+                 cancelSelectCustomer={cancelSelectCustomer} />
+                }
+                <CustomerForm />                
             </Grid.Column>
         </Grid>
 
