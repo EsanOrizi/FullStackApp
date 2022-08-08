@@ -5,11 +5,10 @@ import { Customer } from '../../../app/models/customer';
 interface Props {
     customers: Customer[];
     selectCustomer: (id: string) => void;
- 
-
+    deleteCustomer: (id: string) => void;
 }
 
-export default function CustomerList({customers, selectCustomer}: Props) {
+export default function CustomerList({customers, selectCustomer, deleteCustomer}: Props) {
     return (
         <Segment>
             <Item.Group divided>
@@ -24,6 +23,7 @@ export default function CustomerList({customers, selectCustomer}: Props) {
                             </Item.Description>
                             <Item.Extra>
                                 <Button onClick={() => selectCustomer(customer.id)} floated='right' content='View' color='blue' />
+                                <Button onClick={() => deleteCustomer(customer.id)} floated='right' content='Delete' color='red' />
                             </Item.Extra>
                         </Item.Content>
                     </Item> 
