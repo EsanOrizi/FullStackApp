@@ -6,9 +6,10 @@ interface Props {
     customer: Customer | undefined;
     closeForm: () => void;  
     createOrEdit: (customer: Customer) => void; 
+    submitting: boolean;
 }
 
-export default function CustomerForm({customer: selectedCustomer, closeForm, createOrEdit}: Props){
+export default function CustomerForm({customer: selectedCustomer, closeForm, createOrEdit, submitting}: Props){
     
     const initialState = selectedCustomer ?? {
         id: '',
@@ -36,7 +37,7 @@ export default function CustomerForm({customer: selectedCustomer, closeForm, cre
                 <Form.Input placeholder='Address' value={customer.address} name='address' onChange={handleInputChange}/>
                 <Form.Input placeholder='Email' value={customer.email} name='email' onChange={handleInputChange}/>
                 <Form.Input placeholder='Phone' value={customer.phone} name='phone' onChange={handleInputChange}/>
-                <Button floated='right' positive type='submit' content='Submit' />
+                <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
                 <Button onClick={closeForm} floated='right' type='submit' content='Cancel' />
             </Form>
         </Segment>

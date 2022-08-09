@@ -15,9 +15,10 @@ interface Props {
     closeForm: () => void;
     createOrEdit: (customer: Customer) => void;
     deleteCustomer: (id: string) => void;
+    submitting: boolean;
 }
 
-export default function CustomerDashboard({customers, selectedCustomer, deleteCustomer,
+export default function CustomerDashboard({customers, selectedCustomer, deleteCustomer, submitting,
         selectCustomer, cancelSelectCustomer, editMode, openForm ,closeForm, createOrEdit}: Props) {
     return (
         <Grid>
@@ -25,6 +26,7 @@ export default function CustomerDashboard({customers, selectedCustomer, deleteCu
                 <CustomerList customers={customers} 
                    selectCustomer={selectCustomer}
                    deleteCustomer={deleteCustomer}
+                   submitting={submitting}
                    />
             </Grid.Column>
             <Grid.Column width='6'>
@@ -35,7 +37,7 @@ export default function CustomerDashboard({customers, selectedCustomer, deleteCu
                  />
                 }
                 {editMode &&
-                <CustomerForm closeForm={closeForm} customer={selectedCustomer} createOrEdit={createOrEdit} /> }                
+                <CustomerForm submitting={submitting} closeForm={closeForm} customer={selectedCustomer} createOrEdit={createOrEdit} /> }                
             </Grid.Column>
         </Grid>
     )

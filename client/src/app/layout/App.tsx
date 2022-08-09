@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 import { Customer } from '../models/customer';
 import NavBar from './NavBar';
 import CustomerDashboard from '../../features/customers/dashboard/CustomerDashboard';
 import {v4 as uuid} from 'uuid'
+import agent from '../api/agent';
 
 
 function App() {
@@ -12,10 +12,11 @@ function App() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   
   useEffect (() => {
-    axios.get('https://localhost:7206/customers').then(response => {
-      setCustomers(response.data);
+    agent.Customers.list().then(response => {
+      setCustomers(response);
     })
   }, [])
 
@@ -37,16 +38,32 @@ function App() {
   }
 
   function handleCreateOrEditCustomer(customer: Customer) {
-    customer.id 
-       ? setCustomers([...customers.filter(x => x.id !== customer.id), customer])  
-       : setCustomers([...customers, {...customer, id: uuid()}]);
-    setEditMode(false);
-    setSelectedCustomer(customer);
+    setSubmitting(true);
+    if(customer.id) {
+      agent.Customers.update(customer).then(() => {
+        setCustomers([...customers.filter(x => x.id !== customer.id), customer]) 
+        setSelectedCustomer(customer);
+        setEditMode(false); 
+        setSubmitting(false);
+      })
+    } else {
+      customer.id = uuid();
+      agent.Customers.create(customer).then(() => {
+        setCustomers([...customers, customer])
+        setSelectedCustomer(customer);
+        setEditMode(false); 
+        setSubmitting(false);
+      })
+    }
   }
 
   function handleDeleteCustomer(id: string){
-    setCustomers([...customers.filter(x => x.id !== id)])
-  }
+    setSubmitting(true);
+    agent.Customers.delete(id).then(() => {
+      setCustomers([...customers.filter(x => x.id !== id)])
+      setSubmitting(false);
+     })
+   }
 
 
   return (
@@ -63,6 +80,7 @@ function App() {
          closeForm={handleFormClose}
          createOrEdit={handleCreateOrEditCustomer}
          deleteCustomer={handleDeleteCustomer}
+         submitting={submitting}
          />
        </Container> 
      </Fragment>
