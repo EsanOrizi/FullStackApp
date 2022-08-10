@@ -4,7 +4,7 @@ import agent from '../agent';
 import {v4 as uuid} from 'uuid';
 
 export default class CustomerStore {
-    customers: Customer[] = [];
+    customerRegistry = new Map<string, Customer>();
     selectedCustomer: Customer | undefined = undefined;
     editMode = false;
     loading = false;
@@ -13,13 +13,17 @@ export default class CustomerStore {
         makeAutoObservable(this)
     }
 
+    get customerArrayFromMap() {
+        return Array.from(this.customerRegistry.values());
+      }
+
     loadCustomers = async () => {
        this.setLoading(true);
         try {
            const customers = await agent.Customers.list();
            customers.forEach((customer) => {
-           this.customers.push(customer);
-          });
+           this.customerRegistry.set(customer.id, customer);  
+        });
           this.setLoading(false);
         }catch (error) {
             console.log(error);
@@ -32,7 +36,7 @@ export default class CustomerStore {
     }
 
     selectCustomer = (id: string) => {
-        this.selectedCustomer = this.customers.find(c => c.id === id);
+        this.selectedCustomer = this.customerRegistry.get(id);
     }
 
     cancelSelectedCustomer = () => {
@@ -54,7 +58,7 @@ export default class CustomerStore {
         try {
             await agent.Customers.create(customer);
             runInAction(() => {
-                this.customers.push(customer);
+                this.customerRegistry.set(customer.id, customer);
                 this.selectedCustomer = customer;
                 this.editMode = false;
                 this.loading = false;
@@ -72,7 +76,7 @@ export default class CustomerStore {
         try {
             await agent.Customers.update(customer);
             runInAction(() => {
-                this.customers = [...this.customers.filter(c => c.id !== customer.id), customer];
+                this.customerRegistry.set(customer.id, customer);
                 this.selectedCustomer = customer;
                 this.editMode = false;
                 this.loading = false;
@@ -89,7 +93,7 @@ export default class CustomerStore {
         try {
            await agent.Customers.delete(id);
            runInAction(() => {
-               this.customers = [...this.customers.filter(c => c.id !== id)];
+               this.customerRegistry.delete(id);
                if (this.selectedCustomer?.id === id) this.cancelSelectedCustomer();
                this.loading = false;
            })

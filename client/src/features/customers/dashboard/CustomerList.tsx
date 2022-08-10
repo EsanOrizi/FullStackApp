@@ -5,19 +5,18 @@ import { useStore } from '../../../app/api/stores/store';
 
 export default observer(function CustomerList() {
     const {customerStore} = useStore();
-    const {deleteCustomer, customers, loading} = customerStore;
+    const {deleteCustomer, customerArrayFromMap, loading} = customerStore;
     const [target, setTarget] = useState('');
 
     function handleCustomerDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
         setTarget(e.currentTarget.name);
         deleteCustomer(id);
-    }
-    
+    }   
 
     return (
         <Segment>
             <Item.Group divided>
-                {customers.map(customer =>(
+                {customerArrayFromMap.map(customer =>(
                     <Item key={customer.id}>
                         <Item.Content>
                             <Item.Header>{customer.name}</Item.Header>
