@@ -1,15 +1,11 @@
+import { observer } from 'mobx-react-lite';
 import React, { SyntheticEvent, useState } from 'react';  
 import { Button, Item, Segment } from 'semantic-ui-react';
-import { Customer } from '../../../app/models/customer';
+import { useStore } from '../../../app/api/stores/store';
 
-interface Props {
-    customers: Customer[];
-    selectCustomer: (id: string) => void;
-    deleteCustomer: (id: string) => void;
-    submitting: boolean;
-}
-
-export default function CustomerList({customers, selectCustomer, deleteCustomer, submitting}: Props) {
+export default observer(function CustomerList() {
+    const {customerStore} = useStore();
+    const {deleteCustomer, customers, loading} = customerStore;
     const [target, setTarget] = useState('');
 
     function handleCustomerDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
@@ -17,6 +13,7 @@ export default function CustomerList({customers, selectCustomer, deleteCustomer,
         deleteCustomer(id);
     }
     
+
     return (
         <Segment>
             <Item.Group divided>
@@ -30,10 +27,10 @@ export default function CustomerList({customers, selectCustomer, deleteCustomer,
                              <div>{customer.phone}</div>
                             </Item.Description>
                             <Item.Extra>
-                                <Button onClick={() => selectCustomer(customer.id)} floated='right' content='View' color='blue' />
+                                <Button onClick={() => customerStore.selectCustomer(customer.id)} floated='right' content='View' color='blue' />
                                 <Button 
                                  name={customer.id}
-                                 loading={submitting && target === customer.id}
+                                 loading={loading && target === customer.id}
                                  onClick={(e) => handleCustomerDelete(e, customer.id)} floated='right' content='Delete' color='red' />
                             </Item.Extra>
                         </Item.Content>
@@ -43,4 +40,4 @@ export default function CustomerList({customers, selectCustomer, deleteCustomer,
 
         </Segment>
     )
-}
+})
