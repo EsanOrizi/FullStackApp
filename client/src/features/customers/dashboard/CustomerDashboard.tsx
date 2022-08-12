@@ -1,28 +1,23 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react';
-import { Grid } from 'semantic-ui-react';
+import { useEffect } from 'react';
 import { useStore } from '../../../app/api/stores/store';
-import CustomerDetails from '../details/CustomerDetails';
-import CustomerForm from '../form/CustomerForm';
 import CustomerList from './CustomerList';
 
-export default observer( function CustomerDashboard() {
-    const {customerStore} = useStore(); 
-    const {selectedCustomer, editMode} = customerStore;       
+export default observer(function CustomerDashboard() {
+    const { customerStore } = useStore();
+    const { loadCustomers, customerRegistry } = customerStore;
+
+    useEffect(() => {
+        if (customerRegistry.size <= 1) loadCustomers();
+    }, [customerRegistry.size, loadCustomers])
+ 
+    useEffect(() => {
+        window.scrollTo(0, 0)
+      }, [])
+
+    if (customerStore.loading) return <h2>Loading</h2>
+
     return (
-        <Grid>
-            <Grid.Column width='10'>
-                <CustomerList 
-                   />
-            </Grid.Column>
-            <Grid.Column width='6'>
-                {selectedCustomer && !editMode && 
-                <CustomerDetails />
-                }
-                {editMode &&
-                <CustomerForm 
-                /> }                
-            </Grid.Column>
-        </Grid>
+        <CustomerList />
     )
-} )
+})

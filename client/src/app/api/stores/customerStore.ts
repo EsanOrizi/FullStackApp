@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import { Customer } from '../../models/customer';
 import agent from '../agent';
-import {v4 as uuid} from 'uuid';
 
 export default class CustomerStore {
     customerRegistry = new Map<string, Customer>();
@@ -22,7 +21,7 @@ export default class CustomerStore {
         try {
            const customers = await agent.Customers.list();
            customers.forEach((customer) => {
-           this.customerRegistry.set(customer.id, customer);  
+           this.setCustomer(customer);  
         });
           this.setLoading(false);
         }catch (error) {
@@ -31,30 +30,42 @@ export default class CustomerStore {
         }
     };
 
+    loadCustomer =async (id:string) => {
+        let customer = this.getCustomer(id);
+        if (customer) {
+            this.selectedCustomer = customer;
+            return customer; 
+        } else {
+            this.loading = true;
+            try {
+                customer = await agent.Customers.details(id);
+                this.setCustomer(customer);
+                runInAction(() => {
+                this.selectedCustomer = customer;
+                this.loading = false;
+                });                
+                return customer; 
+            } catch (error) {
+               console.log(error); 
+               this.loading = false;
+            }
+        }
+    }
+
+    private setCustomer = (customer: Customer) => {
+          this.customerRegistry.set(customer.id, customer);
+    }
+
+    private getCustomer = (id: string) => {
+        return this.customerRegistry.get(id);
+    }
+
     setLoading = (state: boolean) => {
         this.loading = state;
     }
 
-    selectCustomer = (id: string) => {
-        this.selectedCustomer = this.customerRegistry.get(id);
-    }
-
-    cancelSelectedCustomer = () => {
-        this.selectedCustomer =  undefined;
-    }
-
-    openForm = (id?: string) => {
-        id ? this.selectCustomer(id) : this.cancelSelectedCustomer();
-        this.editMode = true;
-    }
-
-    closeForm = () => {
-        this.editMode = false;
-    }
-
     createCustomer = async (customer: Customer) => {
         this.loading = true;
-        customer.id = uuid();
         try {
             await agent.Customers.create(customer);
             runInAction(() => {
@@ -94,7 +105,7 @@ export default class CustomerStore {
            await agent.Customers.delete(id);
            runInAction(() => {
                this.customerRegistry.delete(id);
-               if (this.selectedCustomer?.id === id) this.cancelSelectedCustomer();
+  //             if (this.selectedCustomer?.id === id) this.cancelSelectedCustomer();
                this.loading = false;
            })
         } catch (error) {

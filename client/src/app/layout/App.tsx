@@ -1,28 +1,32 @@
-import React , { Fragment, useEffect, useState } from 'react';
+import { Fragment } from 'react';
 import { Container } from 'semantic-ui-react';
 import NavBar from './NavBar';
 import CustomerDashboard from '../../features/customers/dashboard/CustomerDashboard';
-import { useStore } from '../api/stores/store';
 import { observer } from 'mobx-react-lite';
+import { Route, useLocation } from 'react-router-dom';
+import HomePage from '../../features/home/HomePage';
+import CustomerForm from '../../features/customers/form/CustomerForm';
+import CustomerDetails from '../../features/customers/details/CustomerDetails';
 
 
 function App() {
- const {customerStore} = useStore();
-
-  useEffect (() => {
-    customerStore.loadCustomers();
- }, [customerStore])
-
-   
-  if(customerStore.loading) return <h2>Loading</h2>
-
+  const location = useLocation();
   return (
-    <Fragment>
-       <NavBar />
-       <Container style={{marginTop: '7em'}}>
-         <CustomerDashboard  />
-       </Container> 
-     </Fragment>
+    <>
+      <Route exact path='/' component={HomePage} />
+      <Route path={'/(.+)'}
+        render={() => (
+          <>
+            <NavBar />
+            <Container style={{ marginTop: '7em' }}>
+              <Route exact path='/customers' component={CustomerDashboard} />
+              <Route path='/customers/:id' component={CustomerDetails} />
+              <Route key={location.key} path={['/createCustomer', '/manage/:id']} component={CustomerForm} />
+            </Container>
+          </>
+        )}
+      />
+    </>
   );
 }
 

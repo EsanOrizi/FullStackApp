@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
-import React, { SyntheticEvent, useState } from 'react';  
+import { SyntheticEvent, useEffect, useState } from 'react';  
+import { Link } from 'react-router-dom';
 import { Button, Item, Segment } from 'semantic-ui-react';
 import { useStore } from '../../../app/api/stores/store';
 
@@ -12,6 +13,9 @@ export default observer(function CustomerList() {
         setTarget(e.currentTarget.name);
         deleteCustomer(id);
     }   
+    useEffect(() => {
+        window.scrollTo(0, 0)
+      }, [])
 
     return (
         <Segment>
@@ -26,7 +30,7 @@ export default observer(function CustomerList() {
                              <div>{customer.phone}</div>
                             </Item.Description>
                             <Item.Extra>
-                                <Button onClick={() => customerStore.selectCustomer(customer.id)} floated='right' content='View' color='blue' />
+                                <Button as={Link} to={`/customers/${customer.id}`} floated='right' content='View' color='blue' />
                                 <Button 
                                  name={customer.id}
                                  loading={loading && target === customer.id}
@@ -36,7 +40,6 @@ export default observer(function CustomerList() {
                     </Item> 
                     ))}
             </Item.Group>
-
         </Segment>
     )
 })
