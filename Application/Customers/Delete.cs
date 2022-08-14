@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Interfaces;
+using MediatR;
 using Persistence;
 
 namespace Application.Customers
@@ -12,18 +13,16 @@ namespace Application.Customers
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly DataContext context;
+            private readonly ICustomerRepository customerRepository;
 
-            public Handler(DataContext context)
+            public Handler(ICustomerRepository customerRepository)
             {
-                this.context = context;
+                this.customerRepository = customerRepository;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var customer = await context.Customers.FindAsync(request.Id);
-                context.Remove(customer);
-                await context.SaveChangesAsync();
+                await customerRepository.DeleteByIdAsync(request.Id);
                 return Unit.Value;
             }
         }

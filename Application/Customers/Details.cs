@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Interfaces;
+using Domain;
 using MediatR;
 using Persistence;
 
@@ -13,16 +14,16 @@ namespace Application.Customers
 
         public class Handler : IRequestHandler<Query, Customer>
         {
-            private readonly DataContext context;
+            private readonly ICustomerRepository customerRepository;
 
-            public Handler(DataContext context)
+            public Handler(ICustomerRepository customerRepository)
             {
-                this.context = context;
+                this.customerRepository = customerRepository;
             }
 
             public async Task<Customer> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await context.Customers.FindAsync(request.Id);
+                return await customerRepository.GetByIdAsync(request.Id);
             }
         }
     }
