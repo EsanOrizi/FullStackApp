@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain;
+using Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -12,16 +13,16 @@ namespace Application.Customers
 
         public class Handler : IRequestHandler<Query, List<Customer>>
         {
-            private readonly ICustomerRepository customerRepository;
+            private readonly IGenericRepository<Customer> genericRepository;
 
-            public Handler(ICustomerRepository customerRepository)
+            public Handler(IGenericRepository<Customer> genericRepository)
             {
-                this.customerRepository = customerRepository;
+                this.genericRepository = genericRepository;
             }
 
             public async Task<List<Customer>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await customerRepository.GetAllAsync();
+                return await genericRepository.ListAllAsync();
             }
         }
     }

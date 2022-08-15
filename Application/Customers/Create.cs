@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
 using Domain;
+using Domain.Interfaces;
 using MediatR;
 using Persistence;
 
@@ -15,12 +16,12 @@ namespace Application.Customers
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly ICustomerRepository customerRepository;
+            private readonly IGenericRepository<Customer> genericRepository;
             private readonly IMapper mapper;
 
-            public Handler(ICustomerRepository customerRepository, IMapper mapper)
+            public Handler(IGenericRepository<Customer> genericRepository, IMapper mapper)
             {
-                this.customerRepository = customerRepository;
+                this.genericRepository = genericRepository;
                 this.mapper = mapper;
             }
 
@@ -29,8 +30,8 @@ namespace Application.Customers
 
                 var customer = new Customer();
                 mapper.Map(request.Customer, customer);
-                await customerRepository.AddAsync(customer);
-                await customerRepository.SaveChangesAsync();
+                await genericRepository.Add(customer);
+                await genericRepository.SaveAsync();
                 return Unit.Value;
             }
         }
