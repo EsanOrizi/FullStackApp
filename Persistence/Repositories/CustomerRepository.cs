@@ -35,17 +35,13 @@ namespace Persistence.Repositories
         {
             var customer = await context.Customers.FindAsync(id);
             context.Remove(customer);
-            await context.SaveChangesAsync();
+         
         }
 
         public async Task AddAsync(Customer customer)
         {
              await context.Set<Customer>().AddAsync(customer);
         }
-
-        public async Task SaveChangesAsync()
-        {
-            await context.SaveChangesAsync();
-        }
+    
     }
 }

@@ -13,7 +13,6 @@ namespace Application.Interfaces
         Task<Customer> GetByIdAsync(Guid id);
         Task DeleteByIdAsync(Guid id);
         Task AddAsync(Customer customer);
-        Task SaveChangesAsync();
-                        
+                       
     }
 }

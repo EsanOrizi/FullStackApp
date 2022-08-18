@@ -105,15 +105,15 @@ export default class CustomerStore {
            await agent.Customers.delete(id);
            runInAction(() => {
                this.customerRegistry.delete(id);
-  //             if (this.selectedCustomer?.id === id) this.cancelSelectedCustomer();
                this.loading = false;
            })
         } catch (error) {
             console.log(error);
             runInAction(() => {
-                this.loading = false;
+            this.loading = false;
             })
         }
     }
 
+   
 }

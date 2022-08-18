@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Domain.Interfaces;
 using Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,9 +22,8 @@ builder.Services.AddCors(opt =>
         policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
     });
 });
-builder.Services.AddMediatR(typeof(List.Handler).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // configure http request pipeline
 

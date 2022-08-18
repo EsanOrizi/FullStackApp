@@ -10,9 +10,5 @@ namespace Persistence
         }
 
         public DbSet<Customer> Customers { get; set; } = null!;
-
-
-
-
     }
 }

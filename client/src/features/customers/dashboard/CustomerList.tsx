@@ -6,17 +6,17 @@ import { useStore } from '../../../app/api/stores/store';
 
 export default observer(function CustomerList() {
     const {customerStore} = useStore();
-    const {deleteCustomer, customerArrayFromMap, loading} = customerStore;
+    const {deleteCustomer, customerArrayFromMap, loading, setLoading} = customerStore;
     const [target, setTarget] = useState('');
 
     function handleCustomerDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
         setTarget(e.currentTarget.name);
-        deleteCustomer(id);
-    }   
+        deleteCustomer(id); 
+        }   
     useEffect(() => {
         window.scrollTo(0, 0)
-      }, [])
-
+        }, [])
+       
     return (
         <Segment>
             <Item.Group divided>
