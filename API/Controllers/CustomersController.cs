@@ -27,7 +27,16 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(Guid id)
         {
-            return await unitOfWork.CustomerRepository.GetByIdAsync(id);
+            var customer = await unitOfWork.CustomerRepository.GetByIdAsync(id);
+            if (customer != null)
+            {
+                return Ok(customer);
+            } else
+            {
+                return NotFound();
+            }
+
+
         }
 
         [HttpPost]
@@ -39,7 +48,7 @@ namespace API.Controllers
             await unitOfWork.CustomerRepository.AddAsync(customer);
             var result = await unitOfWork.Complete();
             if (result <= 0) return null;
-            return Ok();
+            return Created(nameof(CreateCustomer), customer);
         }
 
         [HttpPut("{id}")]
@@ -49,7 +58,7 @@ namespace API.Controllers
             mapper.Map(customer, existingCustomer);
             var result = await unitOfWork.Complete();
             if (result <= 0) return null;
-            return Ok();
+            return Created(nameof(CreateCustomer), customer);
 
         }
 
@@ -58,10 +67,8 @@ namespace API.Controllers
         {
             await unitOfWork.CustomerRepository.DeleteByIdAsync(id);
             var result = await unitOfWork.Complete();
-            if (result <= 0) return null;
+            if (result <= 0) NotFound();
             return Ok();
-
-
         }
 
     }

@@ -21,27 +21,43 @@ namespace Persistence.Repositories
 
         public async Task<List<Customer>> GetAllAsync()
         {
-            return await context.Customers.ToListAsync();
+            try
+            {
+                List<Customer> listOfCustomers = await context.Customers.ToListAsync();
+                return listOfCustomers;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Cound not get list of customers", ex);
+            }  
         }
 
 
         public async Task<Customer> GetByIdAsync(Guid id)
         {
-            return await context.Customers.FindAsync(id);
+
+            var customer = await context.Customers.FindAsync(id);
+            if (customer == null) throw new Exception("Customer not found");
+            return customer;
         }
 
-        
         public async Task DeleteByIdAsync(Guid id)
         {
-            var customer = await context.Customers.FindAsync(id);
-            context.Remove(customer);
-         
+            try
+            {
+                var customer = await context.Customers.FindAsync(id);
+                context.Remove(customer);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Customer not found", ex);
+            }
         }
+
 
         public async Task AddAsync(Customer customer)
         {
-             await context.Set<Customer>().AddAsync(customer);
-        }
-    
+            await context.Set<Customer>().AddAsync(customer);
+        }   
     }
 }
