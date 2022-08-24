@@ -81,6 +81,25 @@ namespace TestProject
             Assert.That(result.IsCompletedSuccessfully, Is.True);
         }
 
+        [Test]
+        public void UpdateAsync_EditCustomer_Test()
+        {
+            var customer = new Customer
+            {
+                Id = Guid.Parse("08d854b0-480c-42f3-1f1b-549a5f4a2888"),
+                Name = "Dan EDITED",
+                Address = "11 Harold Road",
+                Phone = "123456",
+                Email = "dan@email.com"
+            };
+
+            var result = customerRepository.UpdateAsync(customer);
+
+            Assert.That(result.IsCompletedSuccessfully, Is.True);
+        }
+
+
+
 
         [OneTimeTearDown]
         public void CleanUp()

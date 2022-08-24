@@ -20,23 +20,28 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Customer>>> GetCustomers()
         {
-            return await unitOfWork.CustomerRepository.GetAllAsync();
+         
+            var customers = await unitOfWork.CustomerRepository.GetAllAsync();
+            return Ok(customers);
         }
 
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(Guid id)
         {
-            var customer = await unitOfWork.CustomerRepository.GetByIdAsync(id);
-            if (customer != null)
+            try
             {
-                return Ok(customer);
-            } else
-            {
-                return NotFound();
+                var customer = await unitOfWork.CustomerRepository.GetByIdAsync(id);
+                if (customer != null)
+                {
+                    return Ok(customer);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-
-
+            catch (Exception ex) { return NotFound(); }
         }
 
         [HttpPost]
@@ -56,10 +61,10 @@ namespace API.Controllers
         {
             var existingCustomer = await unitOfWork.CustomerRepository.GetByIdAsync(id);
             mapper.Map(customer, existingCustomer);
+            await unitOfWork.CustomerRepository.UpdateAsync(customer);
             var result = await unitOfWork.Complete();
             if (result <= 0) return null;
             return Created(nameof(CreateCustomer), customer);
-
         }
 
         [HttpDelete("{id}")]

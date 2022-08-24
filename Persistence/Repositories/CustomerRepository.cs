@@ -54,10 +54,15 @@ namespace Persistence.Repositories
             }
         }
 
-
         public async Task AddAsync(Customer customer)
         {
             await context.Set<Customer>().AddAsync(customer);
-        }   
+        }
+
+        public async Task UpdateAsync(Customer customer)
+        {
+            var existingCustomer = await context.Customers.FindAsync(customer.Id);
+            context.Entry(existingCustomer).CurrentValues.SetValues(customer); 
+        }
     }
 }
