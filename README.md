@@ -10,8 +10,8 @@ Full stack app demo with CRUD operations
    * Code first approach for database design and use of entity framework
    * Clean Architecture 
    * CQRS and Mediator pattern
-   * Unit test using NUnit
-   * Repository pattern, Unit of Work 
+   * Unit test using NUnit (Mediator removed branch) 
+   * Repository pattern, Unit of Work (Mediator removed branch) 
 
 * Frontend React
    * Typescript
